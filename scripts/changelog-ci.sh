@@ -5,18 +5,19 @@
 # -----------------------------------------------------------------------------
 # Get all the variables required
 # -----------------------------------------------------------------------------
-filename=$INPUT_CHANGELOG_FILENAME
-config_file=$INPUT_CONFIG_FILE
-version_file=$INPUT_VERSION_FILE
-mode_file=$INPUT_MODE_FILE
-base_branch=$INPUT_BASE_BRANCH
+filename="$INPUT_CHANGELOG_FILENAME"
+config_file="$INPUT_CONFIG_FILE"
+version_file="$INPUT_VERSION_FILE"
+mode_file="$INPUT_MODE_FILE"
+base_branch="$INPUT_BASE_BRANCH"
 
 # Commiter details
-username=$INPUT_COMMITTER_USERNAME
-email=$INPUT_COMMITTER_EMAIL
+username="$INPUT_COMMITTER_USERNAME"
+email="$INPUT_COMMITTER_EMAIL"
 
 # Accesses
 github_token=$GITHUB_TOKEN
+head_ref=$GITHUB_HEAD_REF
 
 # Get project information
 source_name=$(cat $config_file | grep Source | sed 's/Source:\ //g')
@@ -32,12 +33,12 @@ fi
 # Config git
 # -----------------------------------------------------------------------------
 echo '::group::Checkout git repository'
-git fetch --prune --unshallow origin head_ref
+git fetch --prune --unshallow origin $head_ref
 echo '::endgroup::'
 echo '::group::Configure git::'
-git checkout head_ref
-git config user.name $username
-git config user.email $email
+git checkout $head_ref
+git config user.name "$username"
+git config user.email "$email"
 echo '::endgroup::'
 
 
@@ -80,5 +81,5 @@ mv ${tmp_changelog} ${filename}
 echo '::group::Commit Changelog::'
 git add ${filename}
 git commit -m '(Changelog CI) Added Changelog'
-git push -u origin head_ref
+git push -u origin $head_ref
 echo '::endgroup::'
